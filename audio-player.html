@@ -3,7 +3,7 @@
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
-<audio id="audio" src="dj.mp3" style="display: none;"></audio>
+<audio id="audio" src="http://40.118.109.205:8000/autodj.ogg" style="display: none;"></audio>
 
 <div class="audio-player">
     <div class="play-buttons">
@@ -11,7 +11,10 @@
     </div>
     <div class="play-content">
         <p><strong> Republic of House Radio</strong></p>
-        <p id="move" style="display: inline;"> <strong id="title">Title:</strong> </p><span>No Audio</span>
+        <div id="title-holder" >
+            <p id="move" style="display: inline;"> <strong >Title:</strong> </p>
+            <span id="title">No Audio</span>
+        </div>
         <input id="vol-control" type="range" min="0" max="100" step="1" oninput="SetVolume(this.value)" onchange="SetVolume(this.value)"></input>
     </div>
 </div>
@@ -36,8 +39,8 @@
 
         function radioTitle() {
             
-            url = 'http://40.68.162.113:8000/json.xsl'; 
-            broadcasturl = 'http://40.68.162.113:8000/audio.ogg';
+            url = 'http://40.118.109.205:8000/json.xsl'; 
+            broadcasturl = 'http://40.118.109.205:8000/audio.ogg';
             $.ajax({
             type: 'GET',
                 url: url,
@@ -48,11 +51,9 @@
                 success: function(json) {
 
                 
-                stationname = json['/audio.ogg']['server_name'];
-                title = json['/audio.ogg']['title'];
+                title = json['/autodj.ogg']['title'];
                 
                 $('#title').text(title);
-                // $('#station').text(stationname);  
 
                 },
                 error: function(e) {
@@ -99,8 +100,10 @@
 </script>
 
 <style>
+
+
 #move{
-    margin-right:2.5px;
+    margin-right:1.5px;
 }
 
 p, span{
@@ -230,6 +233,19 @@ input[type=range]:focus::-ms-fill-upper {
 .play-content{
     flex-grow: 2;
     padding: 0 5px ;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+#title-holder{
+    white-space: nowrap;
+    display: inline;
+}
+
+
+
+#title{
+   color: grey
 }
 
 p{
