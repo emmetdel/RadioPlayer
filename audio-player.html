@@ -1,0 +1,244 @@
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<audio id="audio" src="dj.mp3" style="display: none;"></audio>
+
+<div class="audio-player">
+    <div class="play-buttons">
+        <div id="img" class="play" onclick="play()"></div>
+    </div>
+    <div class="play-content">
+        <p><strong> Republic of House Radio</strong></p>
+        <p id="move" style="display: inline;"> <strong id="title">Title:</strong> </p><span>No Audio</span>
+        <input id="vol-control" type="range" min="0" max="100" step="1" oninput="SetVolume(this.value)" onchange="SetVolume(this.value)"></input>
+    </div>
+</div>
+
+
+<script>
+
+        $(document).ready(function(){
+
+            var url;
+            var title;
+            var broadcasturl;
+            var stationname;
+
+            radioTitle();
+
+            setTimeout(function(){radioTitle();}, 2000);
+            setInterval(function(){radioTitle();}, 15000); 
+
+
+        });
+
+        function radioTitle() {
+            
+            url = 'http://40.68.162.113:8000/json.xsl'; 
+            broadcasturl = 'http://40.68.162.113:8000/audio.ogg';
+            $.ajax({
+            type: 'GET',
+                url: url,
+                jsonpCallback: 'parseMusic',
+                async: true,
+                contentType: "application/json",
+                dataType: 'jsonp',
+                success: function(json) {
+
+                
+                stationname = json['/audio.ogg']['server_name'];
+                title = json['/audio.ogg']['title'];
+                
+                $('#title').text(title);
+                // $('#station').text(stationname);  
+
+                },
+                error: function(e) {
+                // alert(e.message);
+                }
+            });
+                        
+        }
+
+    var player = document.getElementById("audio");
+    player.controls = true;
+    var image = document.getElementById("img");
+
+    function play(){
+
+        if(!player.paused){
+
+            player.pause(); 
+            image.classList.remove('pause');
+            image.classList.add('play');
+            
+
+        }else{
+
+            player.play(); 
+            image.classList.remove('play');
+            image.classList.add('pause');
+        }
+    }
+
+    function playAudio() { 
+        player.play(); 
+    } 
+
+    function pauseAudio() { 
+        player.pause(); 
+    }
+
+    function SetVolume(val){
+        player.volume = val / 100;
+    }
+
+
+</script>
+
+<style>
+#move{
+    margin-right:2.5px;
+}
+
+p, span{
+    font-family: 'Open Sans', sans-serif;
+}
+
+span{
+    font-size: 14px;
+    font-style: italic;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 17px 6px;
+  width: 80%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #B6B6B6;
+  border-radius: 8px;
+  border: 0px solid #8A8A8A;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px #828282;
+  border: 1px solid #8A8A8A;
+  height: 13px;
+  width: 13px;
+  border-radius: 19px;
+  background: #000;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -4.5px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #B6B6B6;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #B6B6B6;
+  border-radius: 8px;
+  border: 0px solid #8A8A8A;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #828282;
+  border: 1px solid #8A8A8A;
+  height: 13px;
+  width: 13px;
+  border-radius: 19px;
+  background: #000;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #B6B6B6;
+  border: 0px solid #8A8A8A;
+  border-radius: 16px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range]::-ms-fill-upper {
+  background: #B6B6B6;
+  border: 0px solid #8A8A8A;
+  border-radius: 16px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #828282;
+  border: 1px solid #8A8A8A;
+  height: 13px;
+  width: 13px;
+  border-radius: 19px;
+  background: #000;
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #B6B6B6;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #B6B6B6;
+}
+
+.play{
+    background-image: url("http://republicofhouse.com/wp-content/uploads/2017/02/play.svg");
+    height: 65px;
+    width: 65px;
+    margin: 12px 0 7.5px 15px;
+}
+.pause{
+    background-image: url("http://republicofhouse.com/wp-content/uploads/2017/02/pause.svg");
+    height: 65px;
+    width: 65px;
+    margin: 12px 0 7.5px 15px;
+}
+.audio-player{
+    width: 325px;
+    height: 100px;
+    /*border: 0.5px solid black;*/
+    display: flex;
+    flex-direction: row;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+
+}
+
+.play-buttons{
+    flex-grow: 1;
+}
+
+.play-content{
+    flex-grow: 2;
+    padding: 0 5px ;
+}
+
+p{
+    margin: 6px;
+}
+
+p:nth-child(1){
+    margin-top:12px;
+    margin-bottom:6px;
+}
+
+</style>
